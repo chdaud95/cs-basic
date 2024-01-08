@@ -93,6 +93,79 @@ void hanoiTowerMove(int num,String a,String b,String c){
     }
   }
 ```
+## [연결 리스트 (Linked List)]
+ADT(Abstract Data Type)는 C언어나 JAVA에서 표현하는 자료형이 아닌 순수한 기능을 나열한 것입니다.
+어떠한 자료구조이건 간에 자료구조의 구현 과 구현된 자료구조의 활용을 완전히 구분되도록 ADT를 정의해야 합니다.
+리스트에서 순수한 기능은 4가지 입니다.
+1. 입력
+2. 첫번째 데이터 조회
+3. 다음 데이터 조회
+4. 삭제
+<br>
+조회에서 2,3 번으로 분리한 이유는 모든데이터 순회 후 인덱스를 초기화 하기 위해서 기능을 분리하였습니다.
+
+### 배열을 이용한 리스트
+```java
+@Slf4j
+public class ArrayList<T> {
+
+  public T[] array;
+  int numOfData;
+  int curPosition;
+
+  public ArrayList(T[] array) {
+    this.array = array;
+    this.numOfData = 0;
+    this.curPosition = -1;
+  }
+
+  public void insert(T data){
+    if(numOfData >= array.length) {
+      log.error("데이터를 더이상 저장할 수 없습니다.");
+      return;
+    }
+    array[numOfData++] = data;
+  }
+
+  public T first(){
+    if(numOfData == 0) {
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    curPosition = 0;
+    return array[curPosition];
+  }
+
+  public T next(){
+    if(curPosition >= array.length - 1 ){
+      log.error("다음 데이터가 없습니다.");
+      return null;
+    }
+    return array[++curPosition];
+  }
+
+  public T remove(){
+    int pos = curPosition;
+    int num = numOfData;
+    T removeData = array[curPosition];
+
+    for( int i = pos ; i< num - 1 ; i++){
+      array[i] = array[i+1];
+
+      //마지막 데이터를 땡겨왔으니 메모리에서 제거해줘야한다.
+      if( i == num - 2 ){
+        array[i+1] = null;
+      }
+    }
+    numOfData--;
+    curPosition--;
+    return removeData;
+  }
+}
+```
+
+### 노드를 이용한 연결 리스트
+배열을 이용한 리스트에 단점은 배열의 길이가 가변적이지 않아 배열의 길이 이상으로 데이터를 추가할 수 없습니다. 이러한 단점을 해결하기 위해 메모리에 노드를 할당하여 각각의 노드를 연결한 형태의 리스트를 구현할 수 있습니다.
 
 
 

@@ -18,7 +18,5 @@ public class HanoiTower {
       hanoiTowerMove(num - 1 , b,a,c);
     }
 
-
-
   }
 }

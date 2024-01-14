@@ -166,7 +166,69 @@ public class ArrayList<T> {
 
 ### 노드를 이용한 연결 리스트
 배열을 이용한 리스트에 단점은 배열의 길이가 가변적이지 않아 배열의 길이 이상으로 데이터를 추가할 수 없습니다. 이러한 단점을 해결하기 위해 메모리에 노드를 할당하여 각각의 노드를 연결한 형태의 리스트를 구현할 수 있습니다.
+필자가 구현할 연결 리스트는 헤드가 존재하며, 해당 헤드는 더미 노드를 가지고 있는 형태이다.
+```java
+public class LinkedList<T> {
+  Node<T> head;
+  Node<T> cur;
+  Node<T> before;
+  int numOfData;
 
+  Comparator<T> comp;
+
+  public LinkedList() {
+    this.head = new Node<>();
+    this.cur = null;
+    this.before = null;
+    numOfData = 0;
+  }
+
+  void insert(T data){
+    Node<T> newNode = new Node<>(data);
+
+    //정렬문
+    Node<T> point = head;
+
+    while(point.getNext() != null && comp.compare(point.getNext().getData(),newNode.getData()) != 0){
+      point = point.getNext();
+    }
+
+    newNode.setNext(point.getNext());
+    point.setNext(newNode);
+    numOfData++;
+  }
+
+  T first(){
+    if(head.getNext() == null){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    before = head;
+    cur = head.getNext();
+    return cur.getData();
+  }
+
+  T next(){
+    if(cur == null || cur.getNext() == null){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    before = cur;
+    cur = cur.getNext();
+    return cur.getData();
+  }
+  T remove(){
+    T data = cur.getData();
+    before.setNext(cur.getNext());
+    cur = before;
+    return data;
+  }
+
+  void setSortRule(Comparator<T> comp){
+    this.comp = comp;
+  }
+}
+```
 
 
 

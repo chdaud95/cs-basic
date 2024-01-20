@@ -373,7 +373,7 @@ public class ArrayBaseStack<T> {
 ### 연결리스트를 이용한 스택
 연결리스트를 이용한 스택을 구현할 때 head가 있는 연결리스트를 이용해 구현할 수 있다.
 
-'''java
+```java
 @Slf4j
 public class ListBaseStack<T> {
 
@@ -413,6 +413,6 @@ public class ListBaseStack<T> {
     return head.getData();
   }
 }
-'''
+```
 
 

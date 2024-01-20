@@ -93,8 +93,221 @@ void hanoiTowerMove(int num,String a,String b,String c){
     }
   }
 ```
+## [연결 리스트 (Linked List)]
+ADT(Abstract Data Type)는 C언어나 JAVA에서 표현하는 자료형이 아닌 순수한 기능을 나열한 것입니다.
+어떠한 자료구조이건 간에 자료구조의 구현 과 구현된 자료구조의 활용을 완전히 구분되도록 ADT를 정의해야 합니다.
+리스트에서 순수한 기능은 4가지 입니다.
+1. 입력
+2. 첫번째 데이터 조회
+3. 다음 데이터 조회
+4. 삭제
+<br>
+조회에서 2,3 번으로 분리한 이유는 모든데이터 순회 후 인덱스를 초기화 하기 위해서 기능을 분리하였습니다.
 
+### 배열을 이용한 리스트
+```java
+@Slf4j
+public class ArrayList<T> {
 
+  public T[] array;
+  int numOfData;
+  int curPosition;
+
+  public ArrayList(T[] array) {
+    this.array = array;
+    this.numOfData = 0;
+    this.curPosition = -1;
+  }
+
+  public void insert(T data){
+    if(numOfData >= array.length) {
+      log.error("데이터를 더이상 저장할 수 없습니다.");
+      return;
+    }
+    array[numOfData++] = data;
+  }
+
+  public T first(){
+    if(numOfData == 0) {
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    curPosition = 0;
+    return array[curPosition];
+  }
+
+  public T next(){
+    if(curPosition >= array.length - 1 ){
+      log.error("다음 데이터가 없습니다.");
+      return null;
+    }
+    return array[++curPosition];
+  }
+
+  public T remove(){
+    int pos = curPosition;
+    int num = numOfData;
+    T removeData = array[curPosition];
+
+    for( int i = pos ; i< num - 1 ; i++){
+      array[i] = array[i+1];
+
+      //마지막 데이터를 땡겨왔으니 메모리에서 제거해줘야한다.
+      if( i == num - 2 ){
+        array[i+1] = null;
+      }
+    }
+    numOfData--;
+    curPosition--;
+    return removeData;
+  }
+}
+```
+
+### 노드를 이용한 연결 리스트
+배열을 이용한 리스트에 단점은 배열의 길이가 가변적이지 않아 배열의 길이 이상으로 데이터를 추가할 수 없습니다. 이러한 단점을 해결하기 위해 메모리에 노드를 할당하여 각각의 노드를 연결한 형태의 리스트를 구현할 수 있습니다.
+필자가 구현할 연결 리스트는 헤드가 존재하며, 해당 헤드는 더미 노드를 가지고 있는 형태이다.
+```java
+public class LinkedList<T> {
+  Node<T> head;
+  Node<T> cur;
+  Node<T> before;
+  int numOfData;
+
+  Comparator<T> comp;
+
+  public LinkedList() {
+    this.head = new Node<>();
+    this.cur = null;
+    this.before = null;
+    numOfData = 0;
+  }
+
+  void insert(T data){
+    Node<T> newNode = new Node<>(data);
+
+    //정렬문
+    Node<T> point = head;
+
+    while(point.getNext() != null && comp.compare(point.getNext().getData(),newNode.getData()) != 0){
+      point = point.getNext();
+    }
+
+    newNode.setNext(point.getNext());
+    point.setNext(newNode);
+    numOfData++;
+  }
+
+  T first(){
+    if(head.getNext() == null){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    before = head;
+    cur = head.getNext();
+    return cur.getData();
+  }
+
+  T next(){
+    if(cur == null || cur.getNext() == null){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    before = cur;
+    cur = cur.getNext();
+    return cur.getData();
+  }
+  T remove(){
+    T data = cur.getData();
+    before.setNext(cur.getNext());
+    cur = before;
+    return data;
+  }
+
+  void setSortRule(Comparator<T> comp){
+    this.comp = comp;
+  }
+}
+```
+
+### 더미 노드를 이용한 양방향 연결 리스트
+양뱡향 연결 리스트는 각 노드가 이전노드와 다음노드를 가리키는 구조를 가진 자료 구조입니다. 양방향으로 탐색이 가능하며,<br>
+head와 tail에 더미노드를 사용하여 입력,삭제시 예외 처리를 간소화할 수 있습니다.(마지막 데이터를 삭제할때 같은 상황을 간소화 가능) 
+
+```java
+@Slf4j
+public class DbDummyLinkedList<T> {
+
+  Node<T> head;
+  Node<T> tail;
+  Node<T> cur;
+
+  int numOfData;
+
+  public DbDummyLinkedList() {
+    this.head = new Node<>();
+    this.tail = new Node<>();
+
+    this.head.setNext(tail);
+    this.head.setPrev(null);
+    this.tail.setNext(null);
+    this.tail.setPrev(head);
+
+    this.cur = null;
+    numOfData = 0;
+  }
+
+  void insert(T data){
+    Node<T> newNode = new Node<>(data);
+
+    tail.getPrev().setNext(newNode);
+    newNode.setPrev(tail.getPrev());
+
+    tail.setPrev(newNode);
+    newNode.setNext(tail);
+
+    numOfData++;
+  }
+
+  T first(){
+    if(head.getNext() == tail) return null;
+    cur = head.getNext();
+    return cur.getData();
+  }
+
+  T next(){
+    if(cur.getNext() == tail) return null;
+    cur = cur.getNext();
+    return cur.getData();
+  }
+
+  T previous(){
+    if(cur.getPrev() == head) return null;
+    cur = cur.getPrev();
+    return cur.getData();
+  }
+
+  T remove(){
+    if(cur == this.head) {
+      log.error("삭제할 데이터가 없습니다.");
+    }
+    Node<T> ref = cur;
+    T data = ref.getData();
+    cur.getNext().setPrev(cur.getPrev());
+    cur.getPrev().setNext(cur.getNext());
+
+    cur = cur.getPrev();
+    numOfData--;
+
+    return data;
+  }
+
+  int count(){
+    return numOfData;
+  }
+
+}
+```
 
 
 

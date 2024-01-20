@@ -309,5 +309,110 @@ public class DbDummyLinkedList<T> {
 }
 ```
 
+## [스택 (Stack)]
+스택은 데이터를 저장하거나 검색하는 기능 중 하나로, 나중에 추가된 데이터가 먼저 제거되는 자료구조입니다. 이를 Last In, First Out (LIFO) 원칙이라고 합니다. 스택은 데이터를 쌓아 올리듯 쌓아 올려지는 구조를 가지고 있습니다.
+
+### 기본 용어
+
+- **Push:** 스택에 데이터를 추가하는 연산을 의미합니다.
+- **Pop:** 스택에서 데이터를 제거하는 연산을 의미합니다.
+- **Top:** 스택의 가장 위에 있는 데이터를 가리키는 포인터입니다.
+- **IsEmpty:** 스택이 비어 있는지 확인하는 연산을 수행합니다.
+
+### 배열을 이용한 스택
+
+```java
+@Slf4j
+public class ArrayBaseStack<T> {
+
+  T[] array;
+
+  int topIndex;
+
+  public ArrayBaseStack(T[] array) {
+    this.array = array;
+    topIndex = -1;
+  }
+
+  boolean isEmpty(){
+    if(topIndex == -1){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  void push(T data){
+    if(topIndex + 1 >= array.length) {
+      log.error("더 이상 데이터를 추가할 수 없습니다.");
+      return;
+    }
+
+    array[++topIndex] = data;
+  }
+
+  T pop(){
+    if(isEmpty()){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+
+    return array[topIndex--];
+  }
+
+  T peek(){
+    if(isEmpty()){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    return array[topIndex];
+  }
+}
+```
+
+### 연결리스트를 이용한 스택
+연결리스트를 이용한 스택을 구현할 때 head가 있는 연결리스트를 이용해 구현할 수 있다.
+
+'''java
+@Slf4j
+public class ListBaseStack<T> {
+
+  Node<T> head;
+
+  public ListBaseStack() {
+    this.head = null;
+  }
+
+  public boolean isEmpty(){
+    return this.head == null;
+  }
+
+  void push(T data){
+    Node<T> newNode = new Node<>(data);
+
+    newNode.setNext(head);
+    head = newNode;
+  }
+
+  T pop(){
+    if(isEmpty()){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    Node<T> ref = head;
+    T data = ref.getData();
+    head = head.getNext();
+    return data;
+  }
+
+  T peek(){
+    if(isEmpty()){
+      log.error("저장된 데이터가 없습니다.");
+      return null;
+    }
+    return head.getData();
+  }
+}
+'''
 
 

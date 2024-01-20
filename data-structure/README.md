@@ -230,6 +230,84 @@ public class LinkedList<T> {
 }
 ```
 
+### 더미 노드를 이용한 양방향 연결 리스트
+양뱡향 연결 리스트는 각 노드가 이전노드와 다음노드를 가리키는 구조를 가진 자료 구조입니다. 양방향으로 탐색이 가능하며,<br>
+head와 tail에 더미노드를 사용하여 입력,삭제시 예외 처리를 간소화할 수 있습니다.(마지막 데이터를 삭제할때 같은 상황을 간소화 가능) 
+
+```java
+@Slf4j
+public class DbDummyLinkedList<T> {
+
+  Node<T> head;
+  Node<T> tail;
+  Node<T> cur;
+
+  int numOfData;
+
+  public DbDummyLinkedList() {
+    this.head = new Node<>();
+    this.tail = new Node<>();
+
+    this.head.setNext(tail);
+    this.head.setPrev(null);
+    this.tail.setNext(null);
+    this.tail.setPrev(head);
+
+    this.cur = null;
+    numOfData = 0;
+  }
+
+  void insert(T data){
+    Node<T> newNode = new Node<>(data);
+
+    tail.getPrev().setNext(newNode);
+    newNode.setPrev(tail.getPrev());
+
+    tail.setPrev(newNode);
+    newNode.setNext(tail);
+
+    numOfData++;
+  }
+
+  T first(){
+    if(head.getNext() == tail) return null;
+    cur = head.getNext();
+    return cur.getData();
+  }
+
+  T next(){
+    if(cur.getNext() == tail) return null;
+    cur = cur.getNext();
+    return cur.getData();
+  }
+
+  T previous(){
+    if(cur.getPrev() == head) return null;
+    cur = cur.getPrev();
+    return cur.getData();
+  }
+
+  T remove(){
+    if(cur == this.head) {
+      log.error("삭제할 데이터가 없습니다.");
+    }
+    Node<T> ref = cur;
+    T data = ref.getData();
+    cur.getNext().setPrev(cur.getPrev());
+    cur.getPrev().setNext(cur.getNext());
+
+    cur = cur.getPrev();
+    numOfData--;
+
+    return data;
+  }
+
+  int count(){
+    return numOfData;
+  }
+
+}
+```
 
 
 

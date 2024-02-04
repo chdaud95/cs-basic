@@ -22,7 +22,7 @@ public class LinkedList<T> {
     numOfData = 0;
   }
 
-  void insert(T data){
+  public void insert(T data){
     Node<T> newNode = new Node<>(data);
 
     //정렬문
@@ -37,7 +37,7 @@ public class LinkedList<T> {
     numOfData++;
   }
 
-  T first(){
+  public T first(){
     if(head.getNext() == null){
       log.error("저장된 데이터가 없습니다.");
       return null;
@@ -47,7 +47,7 @@ public class LinkedList<T> {
     return cur.getData();
   }
 
-  T next(){
+  public T next(){
     if(cur == null || cur.getNext() == null){
       log.error("저장된 데이터가 없습니다.");
       return null;
@@ -56,14 +56,14 @@ public class LinkedList<T> {
     cur = cur.getNext();
     return cur.getData();
   }
-  T remove(){
+  public T remove(){
     T data = cur.getData();
     before.setNext(cur.getNext());
     cur = before;
     return data;
   }
 
-  void setSortRule(Comparator<T> comp){
+  public void setSortRule(Comparator<T> comp){
     this.comp = comp;
   }
 }

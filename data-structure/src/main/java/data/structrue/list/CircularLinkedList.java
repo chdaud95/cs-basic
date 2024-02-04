@@ -19,7 +19,7 @@ public class CircularLinkedList<T> {
     numOfData = 0;
   }
 
-  void insert(T data){
+  public void insert(T data){
     Node<T> newNode = new Node<>(data);
     if(tail == null) {
       tail = newNode;
@@ -32,7 +32,7 @@ public class CircularLinkedList<T> {
     numOfData++;
   }
 
-  void frontInsert(T data){
+  public void frontInsert(T data){
     Node<T> newNode = new Node<>(data);
     if(tail == null){
       tail = newNode;
@@ -45,7 +45,7 @@ public class CircularLinkedList<T> {
     numOfData++;
   }
 
-  T first(){
+  public T first(){
     if(tail == null){
       log.error("저장된 데이터가 없습니다.");
       return null;
@@ -55,7 +55,7 @@ public class CircularLinkedList<T> {
     return cur.getData();
   };
 
-  T next(){
+  public T next(){
     if(tail == null || cur == null){
       log.error("저장된 데이터가 없습니다.");
       return null;
@@ -65,7 +65,7 @@ public class CircularLinkedList<T> {
     return cur.getData();
   }
 
-  T remove(){
+  public T remove(){
     Node<T> pos = cur;
     T data = pos.getData();
     if(cur == tail){
@@ -82,11 +82,11 @@ public class CircularLinkedList<T> {
     return data;
   }
 
-  int count(){
+  public int count(){
     return numOfData;
   }
 
-  void allPrint(){
+  public void allPrint(){
     if(tail == null){
       log.error("저장된 데이터가 없습니다.");
       return;

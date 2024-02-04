@@ -312,7 +312,7 @@ public class DbDummyLinkedList<T> {
 ## [스택 (Stack)]
 스택은 데이터를 저장하거나 검색하는 기능 중 하나로, 나중에 추가된 데이터가 먼저 제거되는 자료구조입니다. 이를 Last In, First Out (LIFO) 원칙이라고 합니다. 스택은 데이터를 쌓아 올리듯 쌓아 올려지는 구조를 가지고 있습니다.
 
-### 기본 용어
+### 기본적인 동작
 
 - **Push:** 스택에 데이터를 추가하는 연산을 의미합니다.
 - **Pop:** 스택에서 데이터를 제거하는 연산을 의미합니다.
@@ -411,6 +411,223 @@ public class ListBaseStack<T> {
       return null;
     }
     return head.getData();
+  }
+}
+```
+## [큐 (Queue)]
+큐는 데이터를 FIFO(First-In-First-Out) 방식으로 저장하고 관리하는 자료 구조입니다. 이 자료 구조는 데이터가 들어온 순서대로 처리할 때 유용하게 사용됩니다. 주로 대기열을 모델링하거나 작업을 조정하는 데 사용됩니다.
+
+### 기본적인 동작
+- **Enqueue**: 큐에 데이터를 추가하는 작업입니다. 새로운 데이터는 항상 큐의 뒤쪽에 추가됩니다.
+- **Dequeue**: 큐에서 데이터를 제거하고 반환하는 작업입니다. 가장 먼저 추가된 데이터가 먼저 제거됩니다.
+- **Peek**: 큐의 가장 앞에 있는 데이터를 반환하지만 제거하지 않는 작업입니다. 큐의 첫 번째 데이터를 확인할 수 있습니다.
+
+### 배열을 이용한 큐
+배열을 이용한 큐는 데이터 추가 시 front,rear가 해당 인덱스를 가르킨다. 하지만 해당 큐를 모두 채우거나 비울 경우 
+front,rear의 규칙(front,rear가 붙어있다)이 동일하여 해당 큐가 비어있는지 차있는지 알 수 없다. 그래서 원형 큐를 이용해 첫번째 인덱스는 비운상태로 데이터를 추가해 나간다.
+데이터를 추가할 땐 rear를 한칸 이동 후 데이터를 추가하며, 데이터를 추출할 땐 front를 한칸 이동 후 해당 데이터를 추출한다.
+![img.png](src/main/resources/img/circularQueue.png)
+```java
+@Slf4j
+public class ArrayQueue<T> {
+
+  T[] arr;
+  int front;
+  int rear;
+
+  public ArrayQueue(T[] arr) {
+    this.arr = arr;
+    this.front = 0;
+    this.rear = 0;
+  }
+
+  public boolean isEmpty(){
+    return front == rear;
+  }
+
+  public void enqueue(T data){
+    if(nextPosIdx(rear) == front){
+      throw new IllegalStateException("데이터가 꽉 찼습니다.");
+    }
+    rear = nextPosIdx(rear);
+    arr[rear] = data;
+  }
+
+  public T dequeue(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    front = nextPosIdx(front);
+    T data = arr[front];
+    arr[front] = null;
+    return data;
+
+  }
+
+  public T peek(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    return arr[nextPosIdx(front)];
+  }
+
+  private int nextPosIdx(int pos){
+    if(pos == arr.length - 1 ){
+      return 0;
+    }else{
+      return pos + 1;
+    }
+  }
+}
+```
+
+### 연결리스트를 이용한 큐
+데이터를 추가하거나 추출하는 방식은 배열을 이용한 방식과 동일하며 , 첫번째를 비우지 않아도 된다.
+```java
+@Slf4j
+public class ListBaseQueue<T> {
+  Node<T> front;
+  Node<T> rear;
+
+  public ListBaseQueue() {
+    this.front = null;
+    this.rear = null;
+  }
+
+  public boolean isEmpty(){
+    return front == null;
+  }
+
+  public void enqueue(T data){
+    Node<T> newNode = new Node<>(data);
+    if(isEmpty()){
+      front = newNode;
+      rear = newNode;
+    }else{
+      rear.setNext(newNode);
+      rear = newNode;
+    }
+  }
+
+  public T dequeue(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+
+    T data = front.getData();
+    front = front.getNext();
+
+    return data;
+  }
+
+  public T peek(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+
+    return front.getData();
+  }
+}
+```
+
+### 덱(Deque)
+덱(Deque)은 양쪽 끝에서 삽입과 삭제가 모두 가능한 자료 구조입니다. "Double-ended queue"의 약어로, 큐와 스택의 특성을 모두 갖고 있습니다. 덱은 양쪽에서 모두 데이터를 처리할 수 있기 때문에 다양한 상황에서 유용하게 사용됩니다.
+
+#### 기본적인 동작
+- **Push Front**: 덱의 앞쪽에 데이터를 추가합니다.
+- **Push Back**: 덱의 뒤쪽에 데이터를 추가합니다.
+- **Pop Front**: 덱의 앞쪽에서 데이터를 제거하고 반환합니다.
+- **Pop Back**: 덱의 뒤쪽에서 데이터를 제거하고 반환합니다.
+- **Peek Front**: 덱의 앞쪽에 있는 데이터를 반환하지만 제거하지 않습니다.
+- **Peek Back**: 덱의 뒤쪽에 있는 데이터를 반환하지만 제거하지 않습니다.
+
+```java
+@Slf4j
+public class Deque<T> {
+
+  Node<T> front;
+  Node<T> rear;
+
+  public Deque() {
+    this.front = null;
+    this.rear = null;
+  }
+
+  public boolean isEmpty(){
+    return front == null;
+  }
+
+  public void frontEnqueue(T data){
+    Node<T> newNode = new Node<>(data);
+    if(isEmpty()){
+      rear = newNode;
+    }else{
+      front.setPrev(newNode);
+    }
+    newNode.setNext(front);
+    front = newNode;
+  }
+  public void endEnqueue(T data){
+    Node<T> newNode = new Node<>(data);
+
+    if(isEmpty()){
+      front = newNode;
+    }else{
+      rear.setNext(newNode);
+    }
+    newNode.setPrev(rear);
+    rear = newNode;
+  }
+
+  public T frontDequeue(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    T data = front.getData();
+    front = front.getNext();
+    if(front == null){
+      rear = null;
+    }else{
+      front.setPrev(null);
+    }
+    return data;
+  }
+
+  public T endDequeue(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    T data = rear.getData();
+    Node<T> prev = rear.getPrev();
+    rear = rear.getPrev();
+    if(rear ==  null){
+      front = null;
+    }else{
+      rear.setNext(null);
+    }
+    return data;
+  }
+
+  public T frontPeek(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    return front.getData();
+  }
+
+  public T endPeek(){
+    if(isEmpty()){
+      log.error("데이터가 없습니다.");
+      return null;
+    }
+    return rear.getData();
   }
 }
 ```

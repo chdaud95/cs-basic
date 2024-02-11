@@ -632,4 +632,245 @@ public class Deque<T> {
 }
 ```
 
+## [트리 (Tree)]
+트리는 계층적인 구조를 표현하는 자료구조로, 노드(node)들의 집합으로 이루어져 있습니다. 각 노드는 하나의 부모(parent) 노드와
+여러 개의 자식(child) 노드를 가질수 있습니다. 트리 구조에서는 한 노드가 여러 개의 자식을 가질 수 있찌만, 부모는 하나만 가질 수 있습니다.
 
+### 트리의 구성 요소
+- **루트 노드 (Root Node)**: 트리의 최상위에 있는 노드로, 다른 모든 노드는 이 루트 노드로부터 시작합니다.
+- **부모 노드 (Parent Node)**: 다른 노드에게 연결된 상위 노드를 가리킵니다.
+- **자식 노드 (Child Node)**: 부모 노드에게 연결된 하위 노드를 가리킵니다.
+- **리프 노드 (Leaf Node)**: 자식을 가지지 않는 노드로, 트리의 맨 끝에 위치합니다.
+- **가지 (Branch)**: 루트에서부터 리프까지 이어지는 경로를 나타냅니다.
+
+### 이진 트리(Binary Tree)와 서브 트리(Sub Tree)
+#### 이진 트리
+이진 트리는 다음 두 조건을 만족해야 합니다.
+1. 루트 노드를 중심으로 두개의 서브 트리로 나뉘어 진다.
+2. 나뉘어진 두 서브 트리도 모두 이진트리어야 한다.
+
+- **포화 이진 트리(Full Binary Tree)**: 모든 레벨이 꽉 찬 이진 트리이다.
+ ![img.png](src/main/resources/img/fullBinaryTree.png)
+
+
+- **완전 이진 트리(Complete Binary Tree)**: 모든 레벨이 꽉 찬 상태는 아니지만 왼쪽부터 노드와 공(empty)노드로 차곡차곡 빈 틈 없이 노드가 채워진 이진트리이다.
+  ![img.png](src/main/resources/img/completeBinaryTree.png)
+
+#### 이진 트리 자료구조의 ADT
+- **MakeBTreeNode**: 이진 트리 노드를 생성한다.
+- **GetData**: 노드에 저장된 데이터를 반환한다.
+- **SetData**: 노드에 데이터를 저장한다.
+- **GetLeftSubTree**: 왼쪽 서브 트리를 반환한다.
+- **GetRightSubTree**: 오른쪽 서브 트리를 반환한다.
+- **MakeLeftSubTree**: 왼쪽 서브 트리를 연결한다.
+- **MakeRightSubTree**: 오른쪽 서브 트리를 연결한다.
+
+```java
+public class BinaryTree<T> {
+
+  BinaryTreeNode<T> makeBTreeNode(){
+    BinaryTreeNode<T> bNode = new BinaryTreeNode<>();
+    bNode.left = null;
+    bNode.right = null;
+    return bNode;
+  }
+  public T getData(BinaryTreeNode<T> bt) {
+    return bt.getData();
+  }
+
+  public void setData(BinaryTreeNode<T> bt,T data) {
+    bt.setData(data);
+  }
+
+  BinaryTreeNode<T> getLeftSubTree(BinaryTreeNode<T> bt){
+    return bt.getLeft();
+  }
+
+  BinaryTreeNode<T> getRightSubTree(BinaryTreeNode<T> bt){
+    return bt.getLeft();
+  }
+
+  void makeLeftSubTree(BinaryTreeNode<T> main,BinaryTreeNode<T> sub){
+    if(main.getLeft() != null) main.setLeft(null);
+    main.setLeft(sub);
+  }
+
+  void makeRightSubTree(BinaryTreeNode<T> main,BinaryTreeNode<T> sub){
+    if(main.getRight() != null) main.setRight(null);
+    main.setRight(sub);
+  }
+}
+```
+
+### 이진 트리의 순회(Traversal)
+이진 트리를 대상으로 하는 대표적인 순회의 세 가지 방법은 다음과 같다.
+- **전위 순회(Preorder Traversal)**: 루트 노드를 먼저
+- **중위 순회(Inorder Traversal)**: 루트 노드를 중간에
+- **후위 순회(PostOrder Traversal)**: 루트 노드를 마지막에
+
+#### 중위 순회(Inorder Traversal)
+![img.png](src/main/resources/img/inorder.png)<br>
+1. 왼쪽 서브 트리의 순회
+2. 루트 노드의 방문
+3. 오른쪽 서브 트리의 순회
+
+```java
+  static void inorderTraverse(BinaryTreeNode<Integer> bt){
+    if(bt == null) return; //bt가 null 이면 재귀 탈출
+
+    inorderTraverse(bt.getLeft());
+    log.info("data : {}",bt.getData());
+    inorderTraverse(bt.getRight());
+  }
+```
+
+#### 후위 순회(Inorder Traversal)
+![img.png](src/main/resources/img/postorder.png)<br>
+1. 왼쪽 서브 트리의 순회
+2. 오른쪽 서브 트리의 순회
+3. 루트 노드의 방문
+```java
+  static void postorderTraverse(BinaryTreeNode<Integer> bt){
+    if(bt == null) return; //bt가 null 이면 재귀 탈출
+
+    postorderTraverse(bt.getLeft());
+    postorderTraverse(bt.getRight());
+    log.info("data : {}",bt.getData());
+  }
+```
+
+
+#### 전위 순회(Inorder Traversal)
+![img_1.png](src/main/resources/img/preorder.png)<br>
+1. 루트 노드의 방문
+2. 왼쪽 서브 트리의 순회
+3. 오른쪽 서브 트리의 순회
+```java
+  static void preorderTraverse(BinaryTreeNode<Integer> bt){
+    if(bt == null) return; //bt가 null 이면 재귀 탈출
+        
+    log.info("data : {}",bt.getData());
+    preorderTraverse(bt.getLeft());
+    preorderTraverse(bt.getRight());
+  }
+```
+## [우선순위 큐 와 힙 (Priority Queue and Heap) ]
+우선순위 큐는 우선순위를 가진 항목들을 저장하고, 가장 높은 우선순위를 가진 항목을 먼저 꺼내어 처리하는 자료구조이다.
+
+### 우선순위 큐의 기능
+- `insert(item, priority)`: 항목과 해당 항목의 우선순위를 큐에 삽입합니다.
+- `delete()`: 가장 높은 우선순위를 가진 항목을 큐에서 삭제하고 반환합니다.
+
+### 우선순위 큐의 구현 방법
+- 배열(Array) 기반 구현
+- 연결 리스트(Linked List) 기반 구현
+- 힙(Heap) 기반 구현
+
+## 힙(Heap)
+힙은 우선순위 큐를 구현하기 위한 자료구조 중 하나로, 모든 노드에 저장된 값은 자직 노드에 저장된 값보다 크거나 같아야하며 완전 이진 트리이다. 즉 루트 노드에 저장된 값이 가장 커야한다.
+힙은 연결리스트가 아닌 배열을 이용하여 구현해야 한다. 연결리스트를 사용할 경우 마지막 위치에 노드를 추가하는것이 쉽지 않다.
+- 최대 힙(Heap) : 루트 노드로 올라갈수록 저장된 값이 커지는 완전이진트리
+- 최소 힙(Heap) : 루트 노드로 올라갈수록 저장된 값이 작아지는 완전이진트리
+  
+최소 힙을 이용하여 우선순위 큐를 구현해 볼려고 한다. 우선순위가 높은 노드가 위쪽에 위치한다.
+
+![img.png](src/main/resources/img/heap.png)
+
+```java
+@Slf4j
+public class UsefulHeap<T> {
+  Comparator<? super T> comp;
+  int numOfData;
+  T[] heapArr;
+
+  public UsefulHeap(Comparator<? super T> comp, T[] heapArr) {
+    this.comp = comp;
+    this.numOfData = 0;
+    this.heapArr = heapArr;
+  }
+
+  public boolean isEmpty(){
+    return numOfData == 0 ;
+  }
+
+  public int getParentIdx(int idx){
+    //부모의 인덱스
+    return idx/2;
+  }
+  public int getLeftChildIdx(int idx){
+    //왼쪽 자식의 인덱스
+    return idx*2;
+  }
+  public int getRightChildIdx(int idx){
+    //오른쪽 자식의 인덱스
+    return getLeftChildIdx(idx)+1;
+  }
+
+  public int getHighPriorityChildIdx(int idx){
+    if(getLeftChildIdx(idx) > numOfData){
+      //힙은 완전 이진 트리로써 왼쪽 노드가 없으면 자식노드가 없는걸 알 수 있다.
+      return 0;
+    }else if(getLeftChildIdx(idx) == numOfData){
+      //힙은 완전 이진 트리로써 왼쪽 노드가 저장된 데이터의 인덱스와 같다면 자식노드가 왼쪽노드만 존재한다는걸 알 수 있다.
+      return getLeftChildIdx(idx);
+    }else{
+      if(comp.compare(heapArr[getLeftChildIdx(idx)],heapArr[getRightChildIdx(idx)]) < 0){
+        //비교 함수를 정의하여 우선순위 결정
+        return getRightChildIdx(idx);
+      }else{
+        return getLeftChildIdx(idx);
+      }
+    }
+  }
+
+  public void insert(T data){
+    int idx = numOfData + 1;
+
+    while(idx != 1){
+//      if(heapArr[getParentIdx(idx)].getPriority().getPri() > priority.getPri()){
+      if(comp.compare(data,heapArr[getParentIdx(idx)]) > 0){
+        /* 힙에서 데이터 저장 시 마지막 노드에 저장 후 부모노드와 우선순위를 비교하여 우선순위가 높을 경우
+         * 데이터 순서를 변경한다. 데이터 입력시 시간복잡도는 O(logN)
+         * */
+        heapArr[idx] = heapArr[getParentIdx(idx)];
+        idx = getParentIdx(idx);
+      }else break;
+    }
+
+    heapArr[idx] = data;
+    numOfData++;
+  }
+
+  public T delete(){
+    int parentIdx = 1;
+    T deleteData = heapArr[parentIdx];
+    T lastData = heapArr[numOfData];
+    int childIdx;
+    while((childIdx = getHighPriorityChildIdx(parentIdx)) != 0){
+//      if(lastEle.getPriority().getPri() > childEle.getPriority().getPri()){
+      if(comp.compare(lastData,heapArr[childIdx]) < 0){
+        /* 힙에서 데이터 삭제 시 우선순위가 가장높은 데이터를 삭제하고 마지막 노드를 루트노드에 위치로 이동한뒤
+         * 우선순위가 높은 자식노드와 비교하여 우선순위가 낮을 경우 데이터 순서를 변경한다.                
+         * */
+        heapArr[parentIdx] = heapArr[childIdx];
+        parentIdx = childIdx;
+      }else break;
+    }
+
+    heapArr[parentIdx] = lastData;
+    heapArr[numOfData] = null;
+    numOfData--;
+    return deleteData;
+  }
+
+  void preorderTraverse(int idx){
+    if( idx > numOfData) return ;
+
+    T data = heapArr[idx];
+    log.info("data : {}",data);
+    preorderTraverse(getLeftChildIdx(idx));
+    preorderTraverse(getRightChildIdx(idx));
+  }
+
+}
+```

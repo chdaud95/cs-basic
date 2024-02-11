@@ -16,14 +16,14 @@ public class ListBaseStack<T> {
     return this.head == null;
   }
 
-  void push(T data){
+  public void push(T data){
     Node<T> newNode = new Node<>(data);
 
     newNode.setNext(head);
     head = newNode;
   }
 
-  T pop(){
+  public T pop(){
     if(isEmpty()){
       log.error("저장된 데이터가 없습니다.");
       return null;
@@ -34,7 +34,7 @@ public class ListBaseStack<T> {
     return data;
   }
 
-  T peek(){
+  public T peek(){
     if(isEmpty()){
       log.error("저장된 데이터가 없습니다.");
       return null;

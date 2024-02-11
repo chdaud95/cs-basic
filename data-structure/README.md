@@ -650,11 +650,13 @@ public class Deque<T> {
 2. 나뉘어진 두 서브 트리도 모두 이진트리어야 한다.
 
 - **포화 이진 트리(Full Binary Tree)**: 모든 레벨이 꽉 찬 이진 트리이다.
- ![img.png](src/main/resources/img/fullBinaryTree.png)
+
+![img.png](src/main/resources/img/fullBinaryTree.png)
 
 
 - **완전 이진 트리(Complete Binary Tree)**: 모든 레벨이 꽉 찬 상태는 아니지만 왼쪽부터 노드와 공(empty)노드로 차곡차곡 빈 틈 없이 노드가 채워진 이진트리이다.
-  ![img.png](src/main/resources/img/completeBinaryTree.png)
+
+![img.png](src/main/resources/img/completeBinaryTree.png)
 
 #### 이진 트리 자료구조의 ADT
 - **MakeBTreeNode**: 이진 트리 노드를 생성한다.

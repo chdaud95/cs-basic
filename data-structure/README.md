@@ -876,3 +876,174 @@ public class UsefulHeap<T> {
 
 }
 ```
+## [정렬 (Sort) ]
+
+### 버블정렬(Bubble Sort)
+버블 정렬은 인접한 두 원소를 비교하여 필요에 따라 서로 위치를 교환하는 정렬 알고리즘입니다. 배열의 끝까지 이동하면서 가장 큰 (또는 작은) 원소가 배열의 끝으로 이동합니다. 이 과정을 반복하여 정렬이 완료됩니다.<br>
+<div style="text-align:center;">
+    <img src="src/main/resources/img/bubbleSort.png" alt="버블정렬">
+</div>
+
+```java
+static void bubbleSort(int[] arr){
+    int i , j;
+    int temp;
+    int n = arr.length;
+
+    for (i = 0 ; i < n - 1 ; i++){
+      for( j = 0 ; j < (n - i) - 1 ; j++){
+        if(arr[j] > arr[j+1]){
+          temp = arr[j+1];
+          arr[j+1] = arr[j];
+          arr[j] = temp;
+        }
+      }
+    }
+  }
+```
+버블정렬에서 비교횟수는 이중 for문 내부에 **if(arr[j] > arr[j+1])** 비교연산으로 데이터의 갯수가 n개일 때 비교횟수는 다음과 같다
+$(n-1) + (n-2) + .... + 2 + 1$ 등차수열의 합에 의해 시간 복잡도는 $O(n^2)$ 이며 이동횟수는 이중for문 내부에서 이동하기 때문에 시간 복잡도는 $O(n^2)$ 이다.
+
+### 선택정렬(Select Sort)
+선택 정렬은 배열을 순회하면서 해당 위치에 최솟값(또는 최댓값)을 선택하여 배열의 맨 앞부터 차례대로 정렬해 나가는 알고리즘입니다.
+<div style="text-align:center;">
+    <img src="src/main/resources/img/selectSort.png" alt="선택정렬">
+</div>
+
+```java
+static void selectSort(int[] arr){
+    int i , j;
+    int temp;
+    int n = arr.length;
+    int maxIdx;
+    for( i = 0 ; i < n - 1 ; i++){
+      maxIdx = i;
+      for(j = i+1 ; j < n ; j++){
+        if(arr[j] > arr[maxIdx]){
+          maxIdx = j;
+        }
+      }
+      temp = arr[i];
+      arr[i] = arr[maxIdx];
+      arr[maxIdx] = temp;
+    }
+  }
+```
+
+선택정렬에서 비교횟수는 이중 for문 내부에 **if(arr[j] > arr[j+1])** 비교연산으로 데이터의 갯수가 n개일 때 비교횟수는 다음과 같다
+$(n-1) + (n-2) + .... + 2 + 1$ 등차수열의 합에 의해 시간 복잡도는 $O(n^2)$ 이며 이동횟수는 이중for문 밖에서 비교하기 때문에 시간 복잡도는 $O(n-1)$ 이다.
+
+### 삽입 정렬(Insertion Sort)
+삽입 정렬은 각 원소를 적절한 위치에 삽입하여 정렬하는 알고리즘입니다. 배열의 첫 번째 원소부터 시작하여, 그 다음 원소를 적절한 위치에 삽입하여 정렬을 진행합니다.
+정렬대상을 두 부분으로 나눠서 , 정렬 안 된 부분에 있는 데이터를 정렬된 부분의 특정 위치에 삽입해가면서 정렬한다.
+<div style="text-align:center;">
+    <img src="src/main/resources/img/insertionSort.png" alt="삽입 정렬">
+</div>
+
+```java
+static void insertionSort(int[] arr){
+    int i , j ;
+    int temp;
+    int n = arr.length;
+
+    for( i = 1 ; i < n ; i++){
+      temp = arr[i];
+      for(j = i-1 ; j >= 0 ; j--){
+        if(temp < arr[j]){
+          arr[j+1] = arr[j];
+        }else break;
+      }
+      arr[j+1] = temp;
+    }
+  }
+```
+
+삽입정렬에서 비교횟수는 이중 for문 내부에  **if(temp < arr[j])** 비교연산으로 데이터의 갯수가 n개일 때 비교횟수는 다음과 같다
+$(n-1) + (n-2) + .... + 2 + 1$ 등차수열의 합에 의해 시간 복잡도는 $O(n^2)$ 이다.
+
+### 힙 정렬(Heap Sort)
+우선순위 큐를 이용하여 정렬을 할 수 있다. 힙의 루트노드에 저장된 값이 정렬순서상 가장 앞선다고 가정하여 데이터를 힙에 입력한다.
+
+```java
+static void heapSort(Integer[] arr){
+    Integer[] init = new Integer[100];
+    UsefulHeap<Integer> heap = new UsefulHeap<>((o1,o2) -> {
+      //오름차순
+      return (o2-o1); 
+    },init);
+    int i ;
+    for( i = 0 ; i < arr.length ; i++){
+      heap.insert(arr[i]);
+    }
+    for( i = 0 ; i < arr.length ; i++){
+       arr[i] = heap.delete();
+    }
+  }
+```
+힙정렬에서 힙에 입력에 대한 시간복잡도는 $O(log_{2}n)$ ,삭제에 대한 시간복잡도는 $O(log_{2}n)$이므로 총 시간 복잡도는 $O(2log_{2}n)$ 즉$O(log_{2}n)$이다.
+
+### 병합 정렬(Merge Sort)
+병합 정렬은 **분할 정복**이라는 알고리즘 디자인 기법에 근거하여 만들어진 정렬방법 이다.
+<div style="text-align:center;">
+    <img src="src/main/resources/img/mergeSort.png" alt="선택정렬">
+</div>
+
+```java
+static void mergeSort(int[] arr,int left , int right){
+    int mid;
+
+    if(left < right){
+      mid = (left+right)/2;
+      mergeSort(arr,left,mid);
+      mergeSort(arr,mid+1,right);
+
+      mergeTwoArea(arr,left,mid,right);
+    }
+  }
+
+  static void mergeTwoArea(int[] arr,int left,int mid, int right){
+
+    int fIdx = left;
+    int rIdx = mid+1;
+    int i ;
+    int[] sortArr = new int[right+1];
+    int sIdx = left;
+
+    while(fIdx <= mid && rIdx <=right){
+      if(arr[fIdx] <= arr[rIdx]){
+        sortArr[sIdx] = arr[fIdx++];
+      }else{
+        sortArr[sIdx] = arr[rIdx++];
+      }
+      sIdx++;
+    }
+
+    if(fIdx > mid){
+      for(i=rIdx ; i<=right ; i++,sIdx++){
+        sortArr[sIdx] = arr[i];
+      }
+    }else{
+      for(i=fIdx ; i<= mid; i++,sIdx++){
+        sortArr[sIdx] = arr[i];
+      }
+    }
+
+    for(i = left ; i<=right ; i ++){
+      arr[i] = sortArr[i];
+    }
+  }
+```
+
+정렬의 대상인 데이터의 수가 n개 일 때, 각 병합의 단계마다 최대 n 번의 비교연산이 진행된다. 8개의 데이터가 있을경우 총 8번의
+비교 연산이 진행되며 2로 나눠 총 3번의 병합이 발생하므로 비교 연산의 시간복잡도는 $O(nlog_{2}n)$ 이며,<br>
+이동 연산은 임시배열에 데이터를 병합하는 과정 $O(n)$ , 임시배열에 저장된 데이터 전부를 원위치로 옮기는 과정 $O(n)$  , 병합 $O(nlog_{2}n)$ 번 발생하므로
+이동 연산의 시간복잡도는 $O(nlog_{2}n)$ 이다.
+
+### 퀵 정렬(Quick Sort)
+퀵 정렬은 분할 정복 알고리즘의 일종으로, 평균적으로 매우 빠른 정렬 알고리즘입니다. 배열을 기준 원소를 기준으로 두 부분으로 분할하고, 각 부분을 재귀적으로 정렬하는 방식으로 동작합니다.
+
+#### 알고리즘 설명
+1. 기준 원소(pivot)를 선택합니다. 보통 배열의 첫 번째 원소, 마지막 원소, 중간 원소 등이 사용됩니다.
+2. 기준 원소를 기준으로 작은 원소는 왼쪽으로, 큰 원소는 오른쪽으로 분할합니다. 이 과정을 피벗을 기준으로 하는 파티션 작업이라고 합니다.
+3. 분할된 부분 배열에 대해 재귀적으로 위 과정을 반복합니다.
+4. 각 부분 배열이 크기가 1이거나 0이 되면 정렬이 완료됩니다.
